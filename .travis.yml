@@ -11,7 +11,7 @@ install:
 script:
 - go build ./
 - zip main.zip pager
-- cd teraform
+- cd terraform
 - terraform init
 - terraform plan -out plan
 
