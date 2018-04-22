@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -31,11 +32,13 @@ func main() {
 }
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if request.QueryStringParameters["token"] != slackToken {
+	values, _ := url.ParseQuery(request.Body)
+
+	if values.Get("token") != slackToken {
 		return events.APIGatewayProxyResponse{Body: "Invalid token", StatusCode: http.StatusUnauthorized, Headers: map[string]string{"Content-Type": "text/plain"}}, nil
 	}
 
-	message := fmt.Sprintf("(#%s) @%s: %s", request.QueryStringParameters["channel_name"], request.QueryStringParameters["user_name"], request.QueryStringParameters["text"])
+	message := fmt.Sprintf("(#%s) @%s: %s", values.Get("channel_name"), values.Get("user_name"), values.Get("text"))
 	sendSMS(message)
 
 	response := slackResponse{
