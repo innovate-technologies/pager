@@ -13,7 +13,7 @@ script:
 - zip main.zip pager
 - cd teraform
 - terraform init
-- terraform plan -o plan
+- terraform plan -out plan
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then teraform apply plan; fi
