@@ -32,7 +32,7 @@ func main() {
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if request.QueryStringParameters["token"] != slackToken {
-		return events.APIGatewayProxyResponse{Body: "Invalid token", StatusCode: http.StatusUnauthorized}, nil
+		return events.APIGatewayProxyResponse{Body: "Invalid token", StatusCode: http.StatusUnauthorized, Headers: map[string]string{"Content-Type": "text/plain"}}, nil
 	}
 
 	message := fmt.Sprintf("(#%s) @%s: %s", request.QueryStringParameters["channel_name"], request.QueryStringParameters["user_name"], request.QueryStringParameters["text"])
